@@ -1,0 +1,14 @@
+title:: ExtraWindows
+summary:: A Quark that extends the Signal class for more windows
+categories:: Quarks
+related:: Classes/Signal#Windows from ExtraWindows Quark
+
+section:: Introduction
+
+This paragraph talks about the quark
+
+section:: List of supported windowing functions
+
+subsection:: Gaussian window
+
+subsection:: Kaiser window

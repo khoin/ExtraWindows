@@ -1,0 +1,39 @@
+CLASSMETHODS:: 
+
+subsection:: Windows from ExtraWindows Quark
+
+METHOD:: gaussianWindow
+
+Fill a Signal of the given size with a Kaiser window.
+
+code::
+Signal.gaussianWindow(1024, 0, 0.4).plot;
+Signal.gaussianWindow(1024, 512, 0.4).plot;
+::
+
+	argument:: size
+	the number of samples in the Signal.
+
+	argument:: pad
+	the number of samples of the size that is zero padding.
+
+	argument:: a
+	the standard deviation (width) of the Gaussian.
+
+METHOD:: kaiserWindow
+
+Fill a Signal of the given size with a Kaiser window.
+
+code::
+Signal.kaiserWindow(1024).plot;
+Signal.kaiserWindow(1024, 512).plot;
+::
+
+	argument:: size
+	the number of samples in the Signal.
+
+	argument:: pad
+	the number of samples of the size that is zero padding.
+
+
+
