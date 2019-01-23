@@ -10,9 +10,12 @@ This paragraph talks about the quark
 section:: List of supported windowing functions
 
 subsection:: Gaussian window
+From J.O. Smith's SASP footnote::Smith, J.O. Spectral Audio Signal Processing, http://ccrma.stanford.edu/~jos/sasp/, online book, 2011 edition, accessed 2019.::, "The Gaussian ''bell curve'' is possibly the only smooth, nonzero function, known in closed form, that transforms to itself."
 
-An interesting window :>
+... Here lies details about Gaussian ...
 
 subsection:: Kaiser window
 
-Another interesting window :>
+Formulated by J.F. Kaiser footnote::J. Kaiser and R. Schafer, "On the use of the I0-sinh window for spectrum analysis," in IEEE Transactions on Acoustics, Speech, and Signal Processing, vol. 28, no. 1, pp. 105-107, February 1980. doi: 10.1109/TASSP.1980.1163349 http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1163349&isnumber=26144::, "The \[Kaiser\] window \[...\] is convenient to explore the tradeoffs between record length, spectral resolution, and leakage in digital spectrum analysis."
+
+.. Here lies details about Kaiser ... Remember to include parameters from the paper that are useful.
