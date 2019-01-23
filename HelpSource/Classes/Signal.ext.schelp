@@ -1,14 +1,16 @@
-CLASSMETHODS:: 
+CLASSMETHODS::
 
 subsection:: Windows from ExtraWindows Quark
 
+For more information, check out the Guide: link::Guides/ExtraWindows::
+
 METHOD:: gaussianWindow
 
-Fill a Signal of the given size with a Kaiser window.
+Fill a Signal of the given size with a Gaussian window.
 
 code::
-Signal.gaussianWindow(1024, 0, 0.4).plot;
-Signal.gaussianWindow(1024, 512, 0.4).plot;
+Signal.gaussianWindow(1024, 0, 3).plot;
+Signal.gaussianWindow(1024, 512, 3).plot;
 ::
 
 	argument:: size
@@ -17,8 +19,11 @@ Signal.gaussianWindow(1024, 512, 0.4).plot;
 	argument:: pad
 	the number of samples of the size that is zero padding.
 
-	argument:: a
-	the standard deviation (width) of the Gaussian.
+	argument:: std
+	the inverse of standard deviation (width) of the Gaussian. Higher means narrower; analogous to quality factor.
+
+	argument:: sym
+	Defaults to 1. A value of 0 would make the window periodic.
 
 METHOD:: kaiserWindow
 
@@ -34,6 +39,12 @@ Signal.kaiserWindow(1024, 512).plot;
 
 	argument:: pad
 	the number of samples of the size that is zero padding.
+
+	argument:: a
+	the alpha value. Reduces to rectangular window at zero and narrows at higher values. Parameterized as described here: link::https://ccrma.stanford.edu/~jos/sasp/Kaiser_Window.html::
+
+	argument:: sym
+	Defaults to 1. A value of 0 would make the window periodic.
 
 
 
