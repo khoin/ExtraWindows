@@ -21,11 +21,11 @@ Signal.gaussianWindow(1024, 512).plot;
 	argument:: pad
 	the number of samples of the size that is zero padding.
 
-	argument:: sym
-	a Boolean indicating whether the window is symmetric or periodic. Default is true.
-
 	argument:: a
 	the inverse of standard deviation (width) of the Gaussian. Higher means narrower; analogous to quality factor.
+
+	argument:: sym
+	a Boolean indicating whether the window is symmetric or periodic. Default is true.
 
 
 METHOD:: kaiserWindow
@@ -43,11 +43,49 @@ Signal.kaiserWindow(1024, 512).plot;
 	argument:: pad
 	the number of samples of the size that is zero padding.
 
-	argument:: sym
-	a Boolean indicating whether the window is symmetric or periodic. Default is true.
-
 	argument:: a
 	the alpha value. Reduces to rectangular window at zero and narrows at higher values. Parameterized as described here: link::https://ccrma.stanford.edu/~jos/sasp/Kaiser_Window.html::
 
+	argument:: sym
+	a Boolean indicating whether the window is symmetric or periodic. Default is true.
 
+METHOD:: lanczosWindow
+
+Fill a Signal of the given size with a Lanczos window.
+
+code::
+Signal.lanczosWindow(1024).plot;
+Signal.lanczosWindow(1024, 512).plot;
+::
+
+	argument:: size
+	the number of samples in the Signal.
+
+	argument:: pad
+	the number of samples of the size that is zero padding.
+
+	argument:: sym
+	a Boolean indicating whether the window is symmetric or periodic. Default is true.
+
+
+METHOD:: tukeyWindow
+
+Fill a Signal of the given size with a Tukey window (tapered-cosine window).
+
+code::
+Signal.tukeyWindow(1024).plot;
+Signal.tukeyWindow(1024, 512).plot;
+::
+
+	argument:: size
+	the number of samples in the Signal.
+
+	argument:: pad
+	the number of samples of the size that is zero padding.
+
+	argument:: a
+	the alpha value. At 0, reduces to Hann window. At 1, reduces to rectangular. Default to 0.5.
+
+	argument:: sym
+	a Boolean indicating whether the window is symmetric or periodic. Default is true.
 

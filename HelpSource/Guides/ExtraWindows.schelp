@@ -16,6 +16,6 @@ From J.O. Smith's SASP footnote::Smith, J.O. Spectral Audio Signal Processing, h
 
 subsection:: Kaiser window
 
-Formulated by J.F. Kaiser footnote::J. Kaiser and R. Schafer, "On the use of the I0-sinh window for spectrum analysis," in IEEE Transactions on Acoustics, Speech, and Signal Processing, vol. 28, no. 1, pp. 105-107, February 1980. doi: 10.1109/TASSP.1980.1163349 http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1163349&isnumber=26144::, "The \[Kaiser\] window \[...\] is convenient to explore the tradeoffs between record length, spectral resolution, and leakage in digital spectrum analysis."
+Formulated by J.F. Kaiser footnote::J. Kaiser and R. Schafer, "On the use of the I0-sinh window for spectrum analysis," in IEEE Transactions on Acoustics, Speech, and Signal Processing, vol. 28, no. 1, pp. 105-107, February 1980. doi: 10.1109/TASSP.1980.1163349 http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1163349&isnumber=26144::, "The [Kaiser] window [...] is convenient to explore the tradeoffs between record length, spectral resolution, and leakage in digital spectrum analysis."
 
 .. Here lies details about Kaiser ... Remember to include parameters from the paper that are useful.

@@ -28,6 +28,14 @@ Formulated by J.F. Kaiser [1], "The \[Kaiser\] window \[...\] is convenient to e
 
 .. Here lies details about Kaiser ... Remember to include parameters from the paper that are useful.
 
+### Lanczos
+
+Sinc window
+
+### Tukey (Tapered Cosine)
+
+Tukey window
+
 ## References
 
 A conglomerate of references that will be properly numbered at some point later:

@@ -26,12 +26,13 @@ TestExtraWindows : UnitTest {
 			var length = [511, 512, 1023, 1024, 9999.rand];
 
 			length.do({ arg len;
-				var window = Signal.perform(wName, len, 0, true, 3);
+				var window = Signal.performKeyValuePairs(wName, [\size, len, \sym, true]);
 
-				this.assertEquals(
+				this.assertArrayFloatEquals(
 					window.reverse,
 					window,
-					"Symmetry test for " ++ wName.asString ++ ", size " ++ len
+					"Symmetry test for " ++ wName.asString ++ ", size " ++ len,
+					within: 3e-08
 				);
 			});
 		});
@@ -43,14 +44,15 @@ TestExtraWindows : UnitTest {
 			var length = [511, 512, 1023, 1024, 9999.rand];
 
 			length.do({ arg len;
-				var window = Signal.perform(wName, len, 0, false, 3);
+				var window = Signal.performKeyValuePairs(wName, [\size, len, \sym, false]);
 
 				window = window ++ window.at(0);
 
-				this.assertEquals(
+				this.assertArrayFloatEquals(
 					window.reverse,
 					window,
-					"Periodic test for " ++ wName.asString ++ ", size " ++ len
+					"Periodic test for " ++ wName.asString ++ ", size " ++ len,
+					within: 3e-08
 				);
 			});
 		});

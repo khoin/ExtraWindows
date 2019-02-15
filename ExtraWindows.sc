@@ -15,11 +15,25 @@
 				{ |x|
 					((2*x - 1)*pi).sincPi;
 				}
+			},
+			\tukey			: { |a|
+				{ |x|
+					if(x < (a/2), {
+						// left Hann
+						0.5*(1 + ( (2*x/a) - 1        ).cosPi);
+					},
+					if(x > (1 - (a/2)), {
+						// right Hann
+						0.5*(1 + ( (2*x/a) - (2/a) + 1).cosPi);
+					}, {
+						1;
+					}));
+				}
 			}
 		);
 	}
 
-	*prWindowFactory { arg type, size, pad = 0, sym = true, a = 3;
+	*prWindowFactory { arg type, size, pad = 0, a = 3, sym = true;
 		var win;
 
 		if (size == 1, {
@@ -48,15 +62,18 @@
 		// Signal.perform(Signal.listOfWindows.choose, 512)
 	}
 
-	*gaussianWindow			{ arg size, pad = 0, sym = true, a = 3;
-		^this.prWindowFactory(\gaussian			, size, pad, sym, a);
+	*gaussianWindow			{ arg size, pad = 0, a = 3, sym = true;
+		^this.prWindowFactory(\gaussian			, size, pad, a, sym);
 	}
 
-	*kaiserWindow			{ arg size, pad = 0, sym = true, a = 3;
-		^this.prWindowFactory(\kaiser			, size, pad, sym, a);
+	*kaiserWindow			{ arg size, pad = 0, a = 3, sym = true;
+		^this.prWindowFactory(\kaiser			, size, pad, a, sym);
 	}
 
-	*lanczosWindow			{ arg size, pad = 0, sym = true, a = 0;
-		^this.prWindowFactory(\lanczos			, size, pad, sym, a);
+	*lanczosWindow			{ arg size, pad = 0, sym = true;
+		^this.prWindowFactory(\lanczos			, size, pad, 0, sym);
+	}
+	*tukeyWindow			{ arg size, pad = 0, a = 0.5, sym = true;
+		^this.prWindowFactory(\tukey			, size, pad, a, sym);
 	}
 }
