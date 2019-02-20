@@ -19,15 +19,24 @@
 			\tukey			: { |a|
 				{ |x|
 					if(x < (a/2), {
-						// left Hann
-						0.5*(1 + ( (2*x/a) - 1        ).cosPi);
+						0.5*(1 + ((2*x/a) - 1        ).cosPi);
 					},
 					if(x > (1 - (a/2)), {
-						// right Hann
-						0.5*(1 + ( (2*x/a) - (2/a) + 1).cosPi);
+						0.5*(1 + ((2*x/a) - (2/a) + 1).cosPi);
 					}, {
 						1;
 					}));
+				}
+			},
+			\hann			: { |a|
+				{ |x|
+					x.sinPi.squared;
+				}
+			},
+			\hamming		: { |a|
+				{ |x|
+					var coeff = 0.53836;
+					(coeff - ((1-coeff)*(2*x).cosPi));
 				}
 			}
 		);
@@ -57,9 +66,19 @@
 
 	*listOfWindows {
 		^this.prWindowFuncs.keys.collect({arg x; (x.asString ++ "Window").asSymbol})
+	}
 
-		// Why would anyone do this?
-		// Signal.perform(Signal.listOfWindows.choose, 512)
+	// Overrides
+	*hanningWindow			{ arg size, pad = 0, sym = true;
+		^this.prWindowFactory(\hann		, size, pad, 0, sym);
+	}
+
+	*hannWindow				{ arg size, pad = 0, sym = true;
+		^this.prWindowFactory(\hann		, size, pad, 0, sym);
+	}
+
+	*hammingWindow				{ arg size, pad = 0, sym = true;
+		^this.prWindowFactory(\hamming		, size, pad, 0, sym);
 	}
 
 	*gaussianWindow			{ arg size, pad = 0, a = 3, sym = true;
@@ -73,6 +92,7 @@
 	*lanczosWindow			{ arg size, pad = 0, sym = true;
 		^this.prWindowFactory(\lanczos			, size, pad, 0, sym);
 	}
+
 	*tukeyWindow			{ arg size, pad = 0, a = 0.5, sym = true;
 		^this.prWindowFactory(\tukey			, size, pad, a, sym);
 	}
