@@ -57,4 +57,21 @@ TestExtraWindows : UnitTest {
 			});
 		});
 	}
+
+	// Test is the maximum value is 1
+	test_maxOne {
+		Signal.listOfWindows.do({ arg wName;
+			var length = [255, 511, 1023, 2047];
+
+			length.do({ arg len;
+				var window = Signal.performKeyValuePairs(wName, [\size, len, \sym, true]);
+
+				this.assertFloatEquals(
+					window.maxItem,
+					1,
+					"Max 1 test for " ++ wName.asString ++ ", size " ++ len
+				);
+			});
+		});
+	}
 }

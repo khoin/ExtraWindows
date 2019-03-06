@@ -1,6 +1,29 @@
 + Signal {
 	*prWindowFuncs {
 		^(
+			\bartlett		: { |a|
+				{ |x|
+					(1-(x-0.5).abs);
+				}
+			},
+			\blackmanHarris	: { |a|
+				{ |x|
+					var c0 = 0.35875;
+					var c1 = 0.48829;
+					var c2 = 0.14128;
+					var c3 = 0.01168;
+					c0 - (c1*(2*x).cosPi) + (c2*(2*2*x).cosPi) - (c3*(3*2*x).cosPi);
+				}
+			},
+			\blackmanNuttall: { |a|
+				{ |x|
+					var c0 = 0.3635819;
+					var c1 = 0.4891775;
+					var c2 = 0.1365995;
+					var c3 = 0.0106411;
+					c0 - (c1*(2*x).cosPi) + (c2*(2*2*x).cosPi) - (c3*(3*2*x).cosPi);
+				}
+			},
 			\gaussian		: { |a|
 				{ |x|
 					((-0.5) * ((x-0.5) * a * 2).squared).exp;
@@ -68,17 +91,20 @@
 		^this.prWindowFuncs.keys.collect({arg x; (x.asString ++ "Window").asSymbol})
 	}
 
-	// Overrides
-	*hanningWindow			{ arg size, pad = 0, sym = true;
-		^this.prWindowFactory(\hann		, size, pad, 0, sym);
+	*bartlettWindow			{ arg size, pad = 0, sym = true;
+		^this.prWindowFactory(\bartlett	, size, pad, 0, sym);
+	}
+
+	*blackmanHarrisWindow	{ arg size, pad = 0, sym = true;
+		^this.prWindowFactory(\blackmanHarris	, size, pad, 0, sym);
+	}
+
+	*blackmanNuttallWindow	{ arg size, pad = 0, sym = true;
+		^this.prWindowFactory(\blackmanNuttall	, size, pad, 0, sym);
 	}
 
 	*hannWindow				{ arg size, pad = 0, sym = true;
-		^this.prWindowFactory(\hann		, size, pad, 0, sym);
-	}
-
-	*hammingWindow				{ arg size, pad = 0, sym = true;
-		^this.prWindowFactory(\hamming		, size, pad, 0, sym);
+		^this.prWindowFactory(\hann				, size, pad, 0, sym);
 	}
 
 	*gaussianWindow			{ arg size, pad = 0, a = 3, sym = true;
