@@ -29,6 +29,17 @@
 					((-0.5) * ((x-0.5) * a * 2).squared).exp;
 				}
 			},
+			\hann			: { |a|
+				{ |x|
+					x.sinPi.squared;
+				}
+			},
+			\hamming		: { |a|
+				{ |x|
+					var coeff = 0.53836;
+					(coeff - ((1-coeff)*(2*x).cosPi));
+				}
+			},
 			\kaiser			: { |a|
 				{ |x|
 					(0.cylBesselI(pi*a*(1-(2*x - 1).squared).sqrt)) / (0.cylBesselI(pi*a));
@@ -49,17 +60,6 @@
 					}, {
 						1;
 					}));
-				}
-			},
-			\hann			: { |a|
-				{ |x|
-					x.sinPi.squared;
-				}
-			},
-			\hamming		: { |a|
-				{ |x|
-					var coeff = 0.53836;
-					(coeff - ((1-coeff)*(2*x).cosPi));
 				}
 			}
 		);
@@ -103,12 +103,12 @@
 		^this.prWindowFactory(\blackmanNuttall	, size, pad, 0, sym);
 	}
 
-	*hannWindow				{ arg size, pad = 0, sym = true;
-		^this.prWindowFactory(\hann				, size, pad, 0, sym);
-	}
-
 	*gaussianWindow			{ arg size, pad = 0, a = 3, sym = true;
 		^this.prWindowFactory(\gaussian			, size, pad, a, sym);
+	}
+
+	*hannWindow				{ arg size, pad = 0, sym = true;
+		^this.prWindowFactory(\hann				, size, pad, 0, sym);
 	}
 
 	*kaiserWindow			{ arg size, pad = 0, a = 3, sym = true;
