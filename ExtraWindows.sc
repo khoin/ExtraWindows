@@ -24,6 +24,17 @@
 					c0 - (c1*(2*x).cosPi) + (c2*(2*2*x).cosPi) - (c3*(3*2*x).cosPi);
 				}
 			},
+			\dolphChebyshev	: { |a, n|
+				{ |x|
+					var y = x - 0.5;
+					var m = n - 1;
+					var oor = 10.pow(a/(-1*20));
+					var x0 = (oor.acosh/m).cosh;
+					var sum = (1 .. m/2).sum { |i| m.chebyshevT(x0*(i*pi/n).cos)*(2*pi*y*m*i/n).cos };
+
+					(oor + (2*sum))/n;
+				}
+			},
 			\gaussian		: { |a|
 				{ |x|
 					((-0.5) * ((x-0.5) * a * 2).squared).exp;
@@ -74,7 +85,7 @@
 
 		win = this.newClear(size-pad-(sym.asInteger))
 					.fill(1)
-					.waveFill(this.prWindowFuncs[type].value(a));
+					.waveFill(this.prWindowFuncs[type].value(a, size-pad));
 
 		if (sym, {
 			win = win ++ this.newClear(1).fill(win[0]);
@@ -101,6 +112,10 @@
 
 	*blackmanNuttallWindow	{ arg size, pad = 0, sym = true;
 		^this.prWindowFactory(\blackmanNuttall	, size, pad, 0, sym);
+	}
+
+	*dolphChebyshevWindow	{  arg size, pad = 0, a = -60, sym = true;
+		^this.prWindowFactory(\dolphChebyshev	, size, pad, a, sym);
 	}
 
 	*gaussianWindow			{ arg size, pad = 0, a = 3, sym = true;
