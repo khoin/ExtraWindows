@@ -3,7 +3,7 @@
 		^(
 			\bartlett		: { |a|
 				{ |x|
-					(1-(x-0.5).abs);
+					(1-(2*x-1).abs);
 				}
 			},
 			\blackmanHarris	: { |a|

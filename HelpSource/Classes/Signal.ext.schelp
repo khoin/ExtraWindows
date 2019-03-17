@@ -6,6 +6,61 @@ subsection:: Windows from ExtraWindows Quark
 
 For more information, check out the Guide: link::Guides/ExtraWindows::
 
+METHOD:: bartlettWindow
+
+Fill a Signal of the given size with a Bartlett/triangular window.
+
+code::
+Signal.bartlettWindow(1024, 0).plot;
+Signal.bartlettWindow(1024, 512).plot;
+::
+
+	argument:: size
+	the number of samples in the Signal.
+
+	argument:: pad
+	the number of samples of the size that is zero padding.
+
+	argument:: sym
+	a Boolean indicating whether the window is symmetric or periodic. Default is true.
+
+METHOD:: blackmanHarrisWindow
+
+Fill a Signal of the given size with a Blackman-Harris window.
+
+code::
+Signal.blackmanHarrisWindow(1024, 0).plot;
+Signal.blackmanHarrisWindow(1024, 512).plot;
+::
+
+	argument:: size
+	the number of samples in the Signal.
+
+	argument:: pad
+	the number of samples of the size that is zero padding.
+
+	argument:: sym
+	a Boolean indicating whether the window is symmetric or periodic. Default is true.
+
+METHOD:: blackmanNuttallWindow
+
+Fill a Signal of the given size with a Blackman-Nuttall window.
+
+code::
+Signal.blackmanNuttallWindow(1024, 0).plot;
+Signal.blackmanNuttallWindow(1024, 512).plot;
+::
+
+	argument:: size
+	the number of samples in the Signal.
+
+	argument:: pad
+	the number of samples of the size that is zero padding.
+
+	argument:: sym
+	a Boolean indicating whether the window is symmetric or periodic. Default is true.
+
+
 METHOD:: gaussianWindow
 
 Fill a Signal of the given size with a Gaussian window.
@@ -26,6 +81,61 @@ Signal.gaussianWindow(1024, 512).plot;
 
 	argument:: sym
 	a Boolean indicating whether the window is symmetric or periodic. Default is true.
+
+METHOD:: hanningWindow
+
+Fill a Signal of the given size with a Hanning window. Overwrote SCClassLibrary to have the symmetry argument.
+
+code::
+Signal.hanningWindow(1024, 0).plot;
+Signal.hanningWindow(1024, 512).plot;
+::
+
+	argument:: size
+	the number of samples in the Signal.
+
+	argument:: pad
+	the number of samples of the size that is zero padding.
+
+	argument:: sym
+	a Boolean indicating whether the window is symmetric or periodic. Default is true.
+
+METHOD:: hammingWindow
+
+Fill a Signal of the given size with a Hamming window. Overwrote SCClassLibrary to have the symmetry argument.
+
+code::
+Signal.hammingWindow(1024, 0).plot;
+Signal.hammingWindow(1024, 512).plot;
+::
+
+	argument:: size
+	the number of samples in the Signal.
+
+	argument:: pad
+	the number of samples of the size that is zero padding.
+
+	argument:: sym
+	a Boolean indicating whether the window is symmetric or periodic. Default is true.
+
+METHOD:: hannWindow
+
+Synonymous with hanningWindow method with the extra symmetry argument.
+
+code::
+Signal.hannWindow(1024, 0).plot;
+Signal.hannWindow(1024, 512).plot;
+::
+
+	argument:: size
+	the number of samples in the Signal.
+
+	argument:: pad
+	the number of samples of the size that is zero padding.
+
+	argument:: sym
+	a Boolean indicating whether the window is symmetric or periodic. Default is true.
+
 
 
 METHOD:: kaiserWindow

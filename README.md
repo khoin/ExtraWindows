@@ -71,8 +71,6 @@ The Lanczos window is essentially a window which terminates at the first zeroes 
 
 Tukey window is the Hann window with 1's filled at its center.
 
-... expand this ...
-
 ## References
 
 1. Heinzel, G.; Rüdiger, A.; Schilling, R., "Spectrum and spectral density estimation by the Discrete Fourier transform (DFT), including a comprehensive list of window functions and some new flat-top windows" Max Planck Institute (MPI) für Gravitationsphysik / Laser Interferometry & Gravitational Wave Astronomy. http://edoc.mpg.de/395068

@@ -7,15 +7,93 @@ section:: Introduction
 
 This paragraph talks about the quark
 
+SECTION:: Comparison of different Windows
+
+Run this code below to display an interface to compare between different windows
+
+code::
+(
+var size = 1024;
+var genCol = Signal.listOfWindows.size.collect { |i|
+		Color.hsv(i/Signal.listOfWindows.size, 0.6, 1, 1)
+	};
+var avBounds = Window.availableBounds;
+var left, mid, windowPlot, right, transferPlot;
+var boxes = [];
+var layout = HLayout(
+	left = VLayout(
+		StaticText().string_("List of Windows").maxHeight_(50).align_(\topLeft)),
+	VLayout(
+		mid = CompositeView(),
+		StaticText().string_("Windows").maxHeight_(50).align_(\center)),
+	VLayout(
+		right = CompositeView(),
+		StaticText().string_("Transforms").maxHeight_(50).align_(\center)));
+
+var window = Window("ExtraWindows Comparison",
+	Rect().width_(avBounds.width*3/4).height_(avBounds.height/2).center_(avBounds.center)
+	).layout_(layout).front;
+
+var boxAction = {
+	var windows = [];
+	var transfers = [];
+	boxes.do({ |b|
+		if(b.value, {
+			var win = Signal.performKeyValuePairs(b.string.asSymbol,[
+				\size, size
+			]);
+			var trans = win.ifft(Signal.newClear(size), Signal.fftCosTable(size))
+			.magnitude.copyRange(0, (size/2).asInteger).ampdb;
+			windows = windows.add(win);
+			transfers = transfers.add(trans);
+		});
+	});
+
+	if(windows.isEmpty, {windows = (0..1)});
+	if(transfers.isEmpty, {transfers = (0..1)});
+
+	windowPlot.value = windows;
+	transferPlot.value = transfers;
+	[windowPlot, transferPlot].do({ |p|
+		p.plots[0].plotColor_(genCol)
+		.backgroundColor_(Color.black)
+		.fontColor_(Color.white)
+		.font_(Font.sansSerif(12, true));
+		p.refresh;
+	});
+
+	transferPlot.domainSpecs = [0.5, 1024, \exp, 0.001, 128].asSpec;
+
+};
+
+Signal.listOfWindows.asArray.sort.do({ |name|
+	var box = CheckBox().string_(name);
+
+	box.action = boxAction;
+	boxes = boxes.add(box);
+	left.add(box);
+});
+
+windowPlot = Plotter(parent: mid).superpose_(true);
+transferPlot = Plotter(parent: right).superpose_(true);
+
+windowPlot.value = (0..1);
+transferPlot.value = (0..1);
+)
+::
+
 section:: List of supported windowing functions
 
 subsection:: Gaussian window
 From J.O. Smith's SASP footnote::Smith, J.O. Spectral Audio Signal Processing, http://ccrma.stanford.edu/~jos/sasp/, online book, 2011 edition, accessed 2019.::, "The Gaussian ''bell curve'' is possibly the only smooth, nonzero function, known in closed form, that transforms to itself."
 
-... Here lies details about Gaussian ...
-
 subsection:: Kaiser window
 
 Formulated by J.F. Kaiser footnote::J. Kaiser and R. Schafer, "On the use of the I0-sinh window for spectrum analysis," in IEEE Transactions on Acoustics, Speech, and Signal Processing, vol. 28, no. 1, pp. 105-107, February 1980. doi: 10.1109/TASSP.1980.1163349 http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1163349&isnumber=26144::, "The [Kaiser] window [...] is convenient to explore the tradeoffs between record length, spectral resolution, and leakage in digital spectrum analysis."
 
-.. Here lies details about Kaiser ... Remember to include parameters from the paper that are useful.
+
+When a is zero, Kaiser window reduces to the retangular window.
+
+The half-width of the mainlobe is shown to be: sqrt(pi^2 + a^2)/(2pi*length).
+
+The first side lobe ampltiude is: 20log10(sinh(a)/(0.217234*a)).
