@@ -25,14 +25,23 @@
 				}
 			},
 			\dolphChebyshev	: { |a, n|
-				{ |x|
-					var y = x - 0.5;
-					var m = n - 1;
-					var oor = 10.pow(a/(-1*20));
-					var x0 = (oor.acosh/m).cosh;
-					var sum = (1 .. m/2).sum { |i| m.chebyshevT(x0*(i*pi/n).cos)*(2*pi*y*m*i/n).cos };
+				var fDom = Signal.newClear(n);
+				var beta = (10.pow(a).acosh/(n-1)).cosh;
+				var ifft;
 
-					(oor + (2*sum))/n;
+				fDom.waveFill({ |x,o,i|
+					(n-1).chebyshevT(beta * (i/n).cosPi);
+				});
+
+				ifft = fDom.ifft(
+					Signal.newClear(n), //imag
+					Signal.fftCosTable(n),
+				).magnitude.normalize;
+
+				{ |x|
+					[
+						ifft[x*(n/2)], ifft[x*(n/2) + 0.5]
+					].sum.half; // linear interpolate
 				}
 			},
 			\gaussian		: { |a|
@@ -114,7 +123,7 @@
 		^this.prWindowFactory(\blackmanNuttall	, size, pad, 0, sym);
 	}
 
-	*dolphChebyshevWindow	{  arg size, pad = 0, a = -60, sym = true;
+	*dolphChebyshevWindow	{  arg size, pad = 0, a = 3, sym = true;
 		^this.prWindowFactory(\dolphChebyshev	, size, pad, a, sym);
 	}
 
