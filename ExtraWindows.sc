@@ -50,6 +50,11 @@
 					((2*x - 1)*pi).sincPi;
 				}
 			},
+			\rect			: { |a|
+				{
+					1;
+				}
+			},
 			\tukey			: { |a|
 				{ |x|
 					if(x < (a/2), {
@@ -91,35 +96,35 @@
 		^this.prWindowFuncs.keys.collect({arg x; (x.asString ++ "Window").asSymbol})
 	}
 
-	*bartlettWindow			{ arg size, pad = 0, sym = true;
+	*bartlettWindow			{ arg size, pad = 0, sym = false;
 		^this.prWindowFactory(\bartlett	, size, pad, 0, sym);
 	}
 
-	*blackmanHarrisWindow	{ arg size, pad = 0, sym = true;
+	*blackmanHarrisWindow	{ arg size, pad = 0, sym = false;
 		^this.prWindowFactory(\blackmanHarris	, size, pad, 0, sym);
 	}
 
-	*blackmanNuttallWindow	{ arg size, pad = 0, sym = true;
+	*blackmanNuttallWindow	{ arg size, pad = 0, sym = false;
 		^this.prWindowFactory(\blackmanNuttall	, size, pad, 0, sym);
 	}
 
-	*gaussianWindow			{ arg size, pad = 0, a = 3, sym = true;
+	*gaussianWindow			{ arg size, pad = 0, a = 3, sym = false;
 		^this.prWindowFactory(\gaussian			, size, pad, a, sym);
 	}
 
-	*hannWindow				{ arg size, pad = 0, sym = true;
+	*hannWindow				{ arg size, pad = 0, sym = false;
 		^this.prWindowFactory(\hann				, size, pad, 0, sym);
 	}
 
-	*kaiserWindow			{ arg size, pad = 0, a = 3, sym = true;
+	*kaiserWindow			{ arg size, pad = 0, a = 3, sym = false;
 		^this.prWindowFactory(\kaiser			, size, pad, a, sym);
 	}
 
-	*lanczosWindow			{ arg size, pad = 0, sym = true;
+	*lanczosWindow			{ arg size, pad = 0, sym = false;
 		^this.prWindowFactory(\lanczos			, size, pad, 0, sym);
 	}
 
-	*tukeyWindow			{ arg size, pad = 0, a = 0.5, sym = true;
+	*tukeyWindow			{ arg size, pad = 0, a = 0.5, sym = false;
 		^this.prWindowFactory(\tukey			, size, pad, a, sym);
 	}
 }

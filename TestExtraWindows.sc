@@ -1,5 +1,9 @@
 /**
+
+Execute the line below to run all tests:
+
 TestExtraWindows.new.run;
+
 **/
 
 TestExtraWindows : UnitTest {

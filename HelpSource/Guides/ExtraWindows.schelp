@@ -5,7 +5,11 @@ related:: Classes/Signal#Windows from ExtraWindows Quark
 
 section:: Introduction
 
-This paragraph talks about the quark
+ExtraWindows provides additional windowing functions to the ones already available in the link::Classes/Signal:: class methods. It also overrides some of the original class methods to provide an extra parameter - sym - controlling the window's symmetric or periodic property.
+
+Documentation on the methods can be found here: link::Classes/Signal#Windows from ExtraWindows Quark::
+
+The README of the repository can be found here: https://github.com/khoin/ExtraWindows
 
 SECTION:: Comparison of different Windows
 
@@ -13,47 +17,60 @@ Run this code below to display an interface to compare between different windows
 
 code::
 (
-var size = 1024;
+var size = 2048;
+var drawnSize = size / 32;
 var genCol = Signal.listOfWindows.size.collect { |i|
 		Color.hsv(i/Signal.listOfWindows.size, 0.6, 1, 1)
 	};
 var avBounds = Window.availableBounds;
 var left, mid, windowPlot, right, transferPlot;
-var boxes = [];
+var boxes = [], sliders = Dictionary.new;
 var layout = HLayout(
-	left = VLayout(
-		StaticText().string_("List of Windows").maxHeight_(50).align_(\topLeft)),
-	VLayout(
+	[left = VLayout(
+		StaticText().string_("List of Windows").maxHeight_(50).align_(\topLeft))
+	, stretch: 1],
+	[VLayout(
 		mid = CompositeView(),
-		StaticText().string_("Windows").maxHeight_(50).align_(\center)),
-	VLayout(
+		StaticText().string_("Time Domain").maxHeight_(50).align_(\center))
+	, stretch: 2],
+	[VLayout(
 		right = CompositeView(),
-		StaticText().string_("Transforms").maxHeight_(50).align_(\center)));
+		StaticText().string_("Frequency Domain").maxHeight_(50).align_(\center))
+	, stretch: 2]
+);
 
 var window = Window("ExtraWindows Comparison",
-	Rect().width_(avBounds.width*3/4).height_(avBounds.height/2).center_(avBounds.center)
+	Rect().width_(avBounds.width*4/5).height_(avBounds.height/2).center_(avBounds.center)
 	).layout_(layout).front;
 
 var boxAction = {
+	var rangeMap = (\tukeyWindow: 1);
 	var windows = [];
 	var transfers = [];
 	boxes.do({ |b|
 		if(b.value, {
+			var range = rangeMap.atFail(b.string.asSymbol, { 12 });
 			var win = Signal.performKeyValuePairs(b.string.asSymbol,[
-				\size, size
+				\size, size,
+				\sym, false,
+				\a, range * sliders.at(b.string.asSymbol).value
 			]);
 			var trans = win.ifft(Signal.newClear(size), Signal.fftCosTable(size))
-			.magnitude.copyRange(0, (size/2).asInteger).ampdb;
+			.magnitude.copyRange(0, drawnSize.asInteger).ampdb;
+
 			windows = windows.add(win);
 			transfers = transfers.add(trans);
 		});
 	});
 
-	if(windows.isEmpty, {windows = (0..1)});
-	if(transfers.isEmpty, {transfers = (0..1)});
+	if(windows.isEmpty, {transfers = windows = (0..1)});
 
 	windowPlot.value = windows;
 	transferPlot.value = transfers;
+
+	transferPlot.specs = ControlSpec(-310, 0, \lin);
+	transferPlot.domainSpecs = ControlSpec(0, drawnSize, 4, 1, 440, units: "bin");
+
 	[windowPlot, transferPlot].do({ |p|
 		p.plots[0].plotColor_(genCol)
 		.backgroundColor_(Color.black)
@@ -61,17 +78,21 @@ var boxAction = {
 		.font_(Font.sansSerif(12, true));
 		p.refresh;
 	});
-
-	transferPlot.domainSpecs = [0.5, 1024, \exp, 0.001, 128].asSpec;
-
 };
 
 Signal.listOfWindows.asArray.sort.do({ |name|
 	var box = CheckBox().string_(name);
+	var slider = Slider();
+
+	slider.orientation = \horizontal;
+	slider.value = 0.25;
+	slider.action = boxAction;
+	sliders.add(name.asSymbol -> slider);
 
 	box.action = boxAction;
 	boxes = boxes.add(box);
-	left.add(box);
+
+	left.add(HLayout([box, s:1], [slider, s:1]));
 });
 
 windowPlot = Plotter(parent: mid).superpose_(true);
@@ -82,18 +103,41 @@ transferPlot.value = (0..1);
 )
 ::
 
-section:: List of supported windowing functions
+section:: Converting Gaussian window from Scipy to ExtraWindow's parameterization
 
-subsection:: Gaussian window
-From J.O. Smith's SASP footnote::Smith, J.O. Spectral Audio Signal Processing, http://ccrma.stanford.edu/~jos/sasp/, online book, 2011 edition, accessed 2019.::, "The Gaussian ''bell curve'' is possibly the only smooth, nonzero function, known in closed form, that transforms to itself."
+Scipy's implementation of their Gaussian window (scipy.signal.gaussian) is different from ExtraWindow's. Here is the converting function:
 
-subsection:: Kaiser window
+code::
+~pyGaus2ew = { |pyLength = 512, pyAlpha = 3, pySym = true, padding = 0|
+	var ewAlpha = (2*pyAlpha).reciprocal * (pyLength-1);
+	Signal.gaussianWindow(pyLength, padding, ewAlpha, pySym);
+};
+~pyGaus2ew.(10, 5);
 
-Formulated by J.F. Kaiser footnote::J. Kaiser and R. Schafer, "On the use of the I0-sinh window for spectrum analysis," in IEEE Transactions on Acoustics, Speech, and Signal Processing, vol. 28, no. 1, pp. 105-107, February 1980. doi: 10.1109/TASSP.1980.1163349 http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1163349&isnumber=26144::, "The [Kaiser] window [...] is convenient to explore the tradeoffs between record length, spectral resolution, and leakage in digital spectrum analysis."
+// Matching Python Code:
+//
+// from scipy import signal
+// window = signal.gaussian(10, 5, True)
+// print(window)
+::
 
+section:: Testing
 
-When a is zero, Kaiser window reduces to the retangular window.
+This Quark comes with its Unit Test. We should expect no failure when we run the test:
 
-The half-width of the mainlobe is shown to be: sqrt(pi^2 + a^2)/(2pi*length).
+code::
+TestExtraWindows.new.run;
+::
 
-The first side lobe ampltiude is: 20log10(sinh(a)/(0.217234*a)).
+section:: References
+
+ExtraWindows was made with referneces to these sources:
+
+NUMBEREDLIST::
+## Smith, J.O. Spectral Audio Signal Processing, http://ccrma.stanford.edu/~jos/sasp/, online book, 2011 edition, accessed 2019.
+
+## J. Kaiser and R. Schafer, "On the use of the I0-sinh window for spectrum analysis," in IEEE Transactions on Acoustics, Speech, and Signal Processing, vol. 28, no. 1, pp. 105-107, February 1980. doi: 10.1109/TASSP.1980.1163349 http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=1163349&isnumber=26144
+
+## Heinzel, G.; Rüdiger, A.; Schilling, R., "Spectrum and spectral density estimation by the Discrete Fourier transform (DFT), including a comprehensive list of window functions and some new flat-top windows" Max Planck Institute (MPI) für Gravitationsphysik / Laser Interferometry & Gravitational Wave Astronomy. http://edoc.mpg.de/395068
+
+::
