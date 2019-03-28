@@ -18,35 +18,42 @@ Run this code below to display an interface to compare between different windows
 code::
 (
 var size = 2048;
-var drawnSize = size / 32;
+var drawnSize = (size/32).asInteger;  // 16th of bandwidth
+var minDb = -120.0;  // minimum dB to display
 var genCol = Signal.listOfWindows.size.collect { |i|
-		Color.hsv(i/Signal.listOfWindows.size, 0.6, 1, 1)
-	};
+	Color.hsv(i/Signal.listOfWindows.size, 0.6, 1, 1)
+};
 var avBounds = Window.availableBounds;
 var left, mid, windowPlot, right, transferPlot;
 var boxes = [], sliders = Dictionary.new;
-var layout = HLayout(
-	[left = VLayout(
-		StaticText().string_("List of Windows").maxHeight_(50).align_(\topLeft))
-	, stretch: 1],
-	[VLayout(
+var layout = HLayout([
+	left = VLayout(StaticText().string_("List of Windows").maxHeight_(50).align_(\topLeft)),
+	stretch: 1
+], [
+	VLayout(
 		mid = CompositeView(),
-		StaticText().string_("Time Domain").maxHeight_(50).align_(\center))
-	, stretch: 2],
-	[VLayout(
+		StaticText().string_("Time Domain").maxHeight_(50).align_(\center)
+	),
+	stretch: 2
+], [
+	VLayout(
 		right = CompositeView(),
-		StaticText().string_("Frequency Domain").maxHeight_(50).align_(\center))
-	, stretch: 2]
-);
+		StaticText().string_("Frequency Domain").maxHeight_(50).align_(\center)
+	),
+	stretch: 2
+]);
 
-var window = Window("ExtraWindows Comparison",
+var window = Window(
+	"ExtraWindows Comparison",
 	Rect().width_(avBounds.width*4/5).height_(avBounds.height/2).center_(avBounds.center)
-	).layout_(layout).front;
+).layout_(layout).front;
 
 var boxAction = {
 	var rangeMap = (\tukeyWindow: 1);
 	var windows = [];
 	var transfers = [];
+	var magNorm = (Array.with(1/size) ++ Array.fill(size/2 - 1, { 2/size })).keep(drawnSize);  // fft mag normalisation
+
 	boxes.do({ |b|
 		if(b.value, {
 			var range = rangeMap.atFail(b.string.asSymbol, { 12 });
@@ -55,9 +62,7 @@ var boxAction = {
 				\sym, false,
 				\a, range * sliders.at(b.string.asSymbol).value
 			]);
-			var trans = win.ifft(Signal.newClear(size), Signal.fftCosTable(size))
-			.magnitude.copyRange(0, drawnSize.asInteger).ampdb;
-
+			var trans = ((win.fft(Signal.newClear(size), Signal.fftCosTable(size)).magnitude).keep(drawnSize) * magNorm).ampdb.max(minDb);
 			windows = windows.add(win);
 			transfers = transfers.add(trans);
 		});
@@ -68,7 +73,7 @@ var boxAction = {
 	windowPlot.value = windows;
 	transferPlot.value = transfers;
 
-	transferPlot.specs = ControlSpec(-310, 0, \lin);
+	transferPlot.specs = ControlSpec(minDb, 0, \lin);  // variable minDb
 	transferPlot.domainSpecs = ControlSpec(0, drawnSize, 4, 1, 440, units: "bin");
 
 	[windowPlot, transferPlot].do({ |p|
